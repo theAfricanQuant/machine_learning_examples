@@ -18,7 +18,7 @@ Y = []
 for line in open('data_poly.csv'):
     x, y = line.split(',')
     x = float(x)
-    X.append([1, x, x*x]) # add the bias term x0 = 1
+    X.append([1, x, x**2])
     # our model is therefore y_hat = w0 + w1 * x + w2 * x**2
     Y.append(float(y))
 

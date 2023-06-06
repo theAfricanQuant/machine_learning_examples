@@ -38,7 +38,7 @@ def plot(bandits, trial):
   for b in bandits:
     y = beta.pdf(x, b.a, b.b)
     plt.plot(x, y, label="real p: %.4f" % b.p)
-  plt.title("Bandit distributions after %s trials" % trial)
+  plt.title(f"Bandit distributions after {trial} trials")
   plt.legend()
   plt.show()
 
@@ -60,7 +60,7 @@ def experiment():
         maxsample = sample
         bestb = b
     if i in sample_points:
-      print("current samples: %s" % allsamples)
+      print(f"current samples: {allsamples}")
       plot(bandits, i)
 
     # pull the arm for the bandit with the largest sample

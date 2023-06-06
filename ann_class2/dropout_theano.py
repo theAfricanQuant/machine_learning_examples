@@ -26,8 +26,8 @@ class HiddenLayer(object):
         self.M2 = M2
         W = np.random.randn(M1, M2) * np.sqrt(2.0 / M1)
         b = np.zeros(M2)
-        self.W = theano.shared(W, 'W_%s' % self.id)
-        self.b = theano.shared(b, 'b_%s' % self.id)
+        self.W = theano.shared(W, f'W_{self.id}')
+        self.b = theano.shared(b, f'b_{self.id}')
         self.params = [self.W, self.b]
 
     def forward(self, X):
@@ -52,12 +52,10 @@ class ANN(object):
         K = len(set(Y))
         self.hidden_layers = []
         M1 = D
-        count = 0
-        for M2 in self.hidden_layer_sizes:
+        for count, M2 in enumerate(self.hidden_layer_sizes):
             h = HiddenLayer(M1, M2, count)
             self.hidden_layers.append(h)
             M1 = M2
-            count += 1
         W = np.random.randn(M1, K) * np.sqrt(2.0 / M1)
         b = np.zeros(K)
         self.W = theano.shared(W, 'W_logreg')
@@ -87,13 +85,9 @@ class ANN(object):
 
         new_cache = [decay*c + (1-decay)*g*g for p, c, g in zip(self.params, cache, grads)]
         new_dparams = [mu*dp - learning_rate*g/T.sqrt(new_c + 1e-10) for p, new_c, dp, g in zip(self.params, new_cache, dparams, grads)]
-        updates = [
-            (c, new_c) for c, new_c in zip(cache, new_cache)
-        ] + [
-            (dp, new_dp) for dp, new_dp in zip(dparams, new_dparams)
-        ] + [
-            (p, p + new_dp) for p, new_dp in zip(self.params, new_dparams)
-        ]
+        updates = (
+            list(zip(cache, new_cache)) + list(zip(dparams, new_dparams))
+        ) + [(p, p + new_dp) for p, new_dp in zip(self.params, new_dparams)]
 
         # momentum only
         # updates = [
@@ -128,7 +122,7 @@ class ANN(object):
                     costs.append(c)
                     e = error_rate(Yvalid, p)
                     print("i:", i, "j:", j, "nb:", n_batches, "cost:", c, "error rate:", e)
-        
+
         if show_fig:
             plt.plot(costs)
             plt.show()

@@ -73,14 +73,10 @@ if __name__ == '__main__':
   # a function to calculate normalized log prob score
   # for a sentence
   def get_score(sentence):
-    score = 0
-    for i in range(len(sentence)):
-      if i == 0:
-        # beginning word
-        score += np.log(bigram_probs[start_idx, sentence[i]])
-      else:
-        # middle word
-        score += np.log(bigram_probs[sentence[i-1], sentence[i]])
+    score = sum(
+        np.log(bigram_probs[start_idx, sentence[i]]) if i ==
+        0 else np.log(bigram_probs[sentence[i - 1], sentence[i]])
+        for i in range(len(sentence)))
     # final word
     score += np.log(bigram_probs[sentence[-1], end_idx])
 

@@ -29,7 +29,7 @@ print("X:", X)
 costs = [] # keep track of squared error cost
 w = np.random.randn(D) / np.sqrt(D) # randomly initialize w
 learning_rate = 0.001
-for t in range(1000):
+for _ in range(1000):
   # update w
   Yhat = X.dot(w)
   delta = Yhat - Y

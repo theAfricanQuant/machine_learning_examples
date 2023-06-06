@@ -21,7 +21,7 @@ wordnet_lemmatizer = WordNetLemmatizer()
 titles = [line.rstrip() for line in open('all_book_titles.txt')]
 
 # copy tokenizer from sentiment example
-stopwords = set(w.rstrip() for w in open('stopwords.txt'))
+stopwords = {w.rstrip() for w in open('stopwords.txt')}
 
 # note: an alternative source of stopwords
 # from nltk.corpus import stopwords
@@ -85,10 +85,8 @@ def tokens_to_vector(tokens):
 N = len(all_tokens)
 D = len(word_index_map)
 X = np.zeros((D, N)) # terms will go along rows, documents along columns
-i = 0
-for tokens in all_tokens:
+for i, tokens in enumerate(all_tokens):
     X[:,i] = tokens_to_vector(tokens)
-    i += 1
 
 def main():
     svd = TruncatedSVD()

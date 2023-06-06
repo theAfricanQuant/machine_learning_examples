@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 wordnet_lemmatizer = WordNetLemmatizer()
 
 # from http://www.lextek.com/manuals/onix/stopwords1.html
-stopwords = set(w.rstrip() for w in open('stopwords.txt'))
+stopwords = {w.rstrip() for w in open('stopwords.txt')}
 
 # note: an alternative source of stopwords
 # from nltk.corpus import stopwords
@@ -176,8 +176,12 @@ for i in range(N):
             wrong_negative_prediction = preds[i]
             maxP_whenYis0 = p
 
-print("Most wrong positive review (prob = %s, pred = %s):" % (minP_whenYis1, wrong_positive_prediction))
+print(
+    f"Most wrong positive review (prob = {minP_whenYis1}, pred = {wrong_positive_prediction}):"
+)
 print(wrong_positive_review)
-print("Most wrong negative review (prob = %s, pred = %s):" % (maxP_whenYis0, wrong_negative_prediction))
+print(
+    f"Most wrong negative review (prob = {maxP_whenYis0}, pred = {wrong_negative_prediction}):"
+)
 print(wrong_negative_review)
 

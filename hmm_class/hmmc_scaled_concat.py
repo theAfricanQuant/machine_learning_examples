@@ -24,13 +24,7 @@ class HMM:
         self.K = K # number of Gaussians
     
     def fit(self, X, max_iter=25, eps=1e-1):
-        # train the HMM model using the Baum-Welch algorithm
-        # a specific instance of the expectation-maximization algorithm
-
-        # concatenate sequences in X and determine start/end positions
-        sequenceLengths = []
-        for x in X:
-            sequenceLengths.append(len(x))
+        sequenceLengths = [len(x) for x in X]
         Xc = np.concatenate(X)
         T = len(Xc)
         startPositions = np.zeros(len(Xc), dtype=np.bool)
@@ -65,7 +59,7 @@ class HMM:
         for it in range(max_iter):
             if it % 1 == 0:
                 print("it:", it)
-            
+
             scale = np.zeros(T)
 
             # calculate B so we can lookup when updating alpha and beta

@@ -38,9 +38,9 @@ class ProbitRegression:
       self.w = np.linalg.solve(A, b)
 
       if show_w and t in show_w:
-        plot_image(self.w, Q, "iteration: %s" % (t+1))
+        plot_image(self.w, Q, f"iteration: {t + 1}")
 
-        
+
     plt.plot(costs)
     plt.show()
 
@@ -82,10 +82,9 @@ class ProbitRegression:
       dist = np.abs(p - 0.5)
       if len(sl) < 3:
         sl.add( (dist, n) )
-      else:
-        if dist < sl[-1][0]:
-          del sl[-1]
-          sl.add( (dist, n) )
+      elif dist < sl[-1][0]:
+        del sl[-1]
+        sl.add( (dist, n) )
     indexes = [v for k, v in sl]
     return X[indexes], Y[indexes]
 

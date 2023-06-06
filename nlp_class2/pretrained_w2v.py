@@ -37,11 +37,11 @@ word_vectors = KeyedVectors.load_word2vec_format(
 #  ('malta', 0.5620371103286743)]
 def find_analogies(w1, w2, w3):
   r = word_vectors.most_similar(positive=[w1, w3], negative=[w2])
-  print("%s - %s = %s - %s" % (w1, w2, r[0][0], w3))
+  print(f"{w1} - {w2} = {r[0][0]} - {w3}")
 
 def nearest_neighbors(w):
   r = word_vectors.most_similar(positive=[w])
-  print("neighbors of: %s" % w)
+  print(f"neighbors of: {w}")
   for word, score in r:
     print("\t%s" % word)
 

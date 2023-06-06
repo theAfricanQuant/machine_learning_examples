@@ -52,7 +52,7 @@ def getCIFAR10():
 
     # train data
     for i in range(5):
-        fn = 'data_batch_%s.mat' % (i+1)
+        fn = f'data_batch_{i + 1}.mat'
         d = loadmat('../large_files/cifar-10-batches-mat/' + fn)
         x = d['data']
         y = d['labels'].flatten()

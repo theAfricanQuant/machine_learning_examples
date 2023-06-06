@@ -73,12 +73,11 @@ def adagrad(cost, params, lr, eps=1e-10):
     caches = [theano.shared(np.ones_like(p.get_value())) for p in params]
     new_caches = [c + g*g for c, g in zip(caches, grads)]
 
-    c_update = [(c, new_c) for c, new_c in zip(caches, new_caches)]
+    c_update = list(zip(caches, new_caches))
     g_update = [
       (p, p - lr*g / T.sqrt(new_c + eps)) for p, new_c, g in zip(params, new_caches, grads)
     ]
-    updates = c_update + g_update
-    return updates
+    return c_update + g_update
 
 
 class RecursiveNN:

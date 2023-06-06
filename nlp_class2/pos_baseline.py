@@ -119,15 +119,14 @@ def get_data(split_sequences=False):
     currentX = []
     currentY = []
     for line in open('chunking/train.txt'):
-        line = line.rstrip()
-        if line:
+        if line := line.rstrip():
             r = line.split()
             word, tag, _ = r
             if word not in word2idx:
                 word2idx[word] = word_idx
                 word_idx += 1
             currentX.append(word2idx[word])
-            
+
             if tag not in tag2idx:
                 tag2idx[tag] = tag_idx
                 tag_idx += 1
@@ -148,8 +147,7 @@ def get_data(split_sequences=False):
     currentX = []
     currentY = []
     for line in open('chunking/test.txt'):
-        line = line.rstrip()
-        if line:
+        if line := line.rstrip():
             r = line.split()
             word, tag, _ = r
             if word in word2idx:

@@ -15,8 +15,7 @@ import matplotlib.pyplot as plt
 def make_poly(X, deg):
     n = len(X)
     data = [np.ones(n)]
-    for d in range(deg):
-        data.append(X**(d+1))
+    data.extend(X**(d+1) for d in range(deg))
     return np.vstack(data).T
 
 

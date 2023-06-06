@@ -45,8 +45,7 @@ def get_r2(X, Y):
     # determine how good the model is by computing the r-squared
     d1 = Y - Yhat
     d2 = Y - Y.mean()
-    r2 = 1 - d1.dot(d1) / d2.dot(d2)
-    return r2
+    return 1 - d1.dot(d1) / d2.dot(d2)
 
 print("r2 for x2 only:", get_r2(X2only, Y))
 print("r2 for x3 only:", get_r2(X3only, Y))

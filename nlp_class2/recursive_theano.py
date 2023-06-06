@@ -23,12 +23,11 @@ def adagrad(cost, params, lr, eps=1e-10):
     caches = [theano.shared(np.ones_like(p.get_value())) for p in params]
     new_caches = [c + g*g for c, g in zip(caches, grads)]
 
-    c_update = [(c, new_c) for c, new_c in zip(caches, new_caches)]
+    c_update = list(zip(caches, new_caches))
     g_update = [
       (p, p - lr*g / T.sqrt(new_c + eps)) for p, new_c, g in zip(params, new_caches, grads)
     ]
-    updates = c_update + g_update
-    return updates
+    return c_update + g_update
 
 
 class RecursiveNN:
@@ -103,7 +102,7 @@ class RecursiveNN:
         py_x = T.nnet.softmax(h[-1].dot(self.Wo) + self.bo)
 
         prediction = T.argmax(py_x, axis=1)
-        
+
         rcost = reg*T.mean([(p*p).sum() for p in self.params])
         if train_inner_nodes:
             # won't work for binary classification
@@ -160,10 +159,7 @@ class RecursiveNN:
                         Why don't you try decreasing the learning rate?")
                     exit()
                 cost += c
-                if train_inner_nodes:
-                    n_correct += np.sum(p == lab)
-                else:
-                    n_correct += (p[-1] == lab[-1])
+                n_correct += np.sum(p == lab) if train_inner_nodes else (p[-1] == lab[-1])
                 it += 1
                 if it % 1 == 0:
                     sys.stdout.write("j/N: %d/%d correct rate so far: %f, cost so far: %f\r" % (it, N, float(n_correct)/n_total, cost))

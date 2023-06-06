@@ -69,7 +69,7 @@ tflosses = []
 init = tf.global_variables_initializer()
 with tf.Session() as sess:
   sess.run(init)
-  for e in range(15):
+  for _ in range(15):
     _, l = sess.run([train_op, loss], feed_dict={inputs: X, targets: Y})
     tflosses.append(l)
 
@@ -119,7 +119,7 @@ train_op = theano.function(
 )
 
 thlosses = []
-for e in range(15):
+for _ in range(15):
   c = train_op(X, Y)
   thlosses.append(c)
 

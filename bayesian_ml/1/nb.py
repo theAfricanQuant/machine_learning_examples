@@ -66,8 +66,7 @@ class NB:
         probability_matrix[:,d] = pdf_d
       posteriors_c = np.prod(probability_matrix, axis=1)*self.pyy[c]
       posteriors[:,c] = posteriors_c
-    P = posteriors[:,1] / np.sum(posteriors, axis=1)
-    return P
+    return posteriors[:,1] / np.sum(posteriors, axis=1)
 
   def predict(self, X):
     return np.round(self.predict_proba(X))
@@ -99,10 +98,9 @@ class NB:
       dist = np.abs(p - 0.5)
       if len(sl) < 3:
         sl.add( (dist, n) )
-      else:
-        if dist < sl[-1][0]:
-          del sl[-1]
-          sl.add( (dist, n) )
+      elif dist < sl[-1][0]:
+        del sl[-1]
+        sl.add( (dist, n) )
     indexes = [v for k, v in sl]
     return X[indexes], Y[indexes]
 
