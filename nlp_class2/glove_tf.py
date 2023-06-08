@@ -43,9 +43,7 @@ class Glove:
             X = np.zeros((V, V))
             N = len(sentences)
             print("number of sentences to process:", N)
-            it = 0
-            for sentence in sentences:
-                it += 1
+            for it, sentence in enumerate(sentences, start=1):
                 if it % 10000 == 0:
                     print("processed", it, "/", N)
                 n = len(sentence)
@@ -157,11 +155,7 @@ class Glove:
 
 
 def main(we_file, w2i_file, use_brown=True, n_files=50):
-    if use_brown:
-        cc_matrix = "cc_matrix_brown.npy"
-    else:
-        cc_matrix = "cc_matrix_%s.npy" % n_files
-
+    cc_matrix = "cc_matrix_brown.npy" if use_brown else f"cc_matrix_{n_files}.npy"
     # hacky way of checking if we need to re-load the raw data or not
     # remember, only the co-occurrence matrix is needed for training
     if os.path.exists(cc_matrix):
@@ -170,18 +164,42 @@ def main(we_file, w2i_file, use_brown=True, n_files=50):
         sentences = [] # dummy - we won't actually use it
     else:
         if use_brown:
-            keep_words = set([
-                'king', 'man', 'woman',
-                'france', 'paris', 'london', 'rome', 'italy', 'britain', 'england',
-                'french', 'english', 'japan', 'japanese', 'chinese', 'italian',
-                'australia', 'australian', 'december', 'november', 'june',
-                'january', 'february', 'march', 'april', 'may', 'july', 'august',
-                'september', 'october',
-            ])
+            keep_words = {
+                'king',
+                'man',
+                'woman',
+                'france',
+                'paris',
+                'london',
+                'rome',
+                'italy',
+                'britain',
+                'england',
+                'french',
+                'english',
+                'japan',
+                'japanese',
+                'chinese',
+                'italian',
+                'australia',
+                'australian',
+                'december',
+                'november',
+                'june',
+                'january',
+                'february',
+                'march',
+                'april',
+                'may',
+                'july',
+                'august',
+                'september',
+                'october',
+            }
             sentences, word2idx = get_sentences_with_word2idx_limit_vocab(n_vocab=5000, keep_words=keep_words)
         else:
             sentences, word2idx = get_wikipedia_data(n_files=n_files, n_vocab=2000)
-        
+
         with open(w2i_file, 'w') as f:
             json.dump(word2idx, f)
 
@@ -208,12 +226,7 @@ if __name__ == '__main__':
     for concat in (True, False):
         print("** concat:", concat)
 
-        if concat:
-            We = np.hstack([W1, W2.T])
-        else:
-            We = (W1 + W2.T) / 2
-
-
+        We = np.hstack([W1, W2.T]) if concat else (W1 + W2.T) / 2
         find_analogies('king', 'man', 'woman', We, word2idx, idx2word)
         find_analogies('france', 'paris', 'london', We, word2idx, idx2word)
         find_analogies('france', 'paris', 'rome', We, word2idx, idx2word)

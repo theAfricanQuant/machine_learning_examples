@@ -70,7 +70,7 @@ input_sequences = tokenizer_inputs.texts_to_sequences(input_texts)
 
 # get the word to index mapping for input language
 word2idx_inputs = tokenizer_inputs.word_index
-print('Found %s unique input tokens.' % len(word2idx_inputs))
+print(f'Found {len(word2idx_inputs)} unique input tokens.')
 num_words_input = len(word2idx_inputs) + 1
 
 # determine maximum length input sequence
@@ -85,7 +85,7 @@ target_sequences = tokenizer_outputs.texts_to_sequences(target_texts)
 
 # get the word to index mapping for output language
 word2idx_outputs = tokenizer_outputs.word_index
-print('Found %s unique output tokens.' % len(word2idx_outputs))
+print(f'Found {len(word2idx_outputs)} unique output tokens.')
 
 # store number of output words for later
 # remember to add 1 since indexing starts at 1

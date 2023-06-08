@@ -50,12 +50,11 @@ def get_data_pos(split_sequences=False):
   currentX = []
   currentY = []
   for line in open('chunking/train.txt'):
-    line = line.rstrip()
-    if line:
+    if line := line.rstrip():
       r = line.split()
       word, tag, _ = r
       currentX.append(word)
-      
+
       currentY.append(tag)
     elif split_sequences:
       Xtrain.append(currentX)
@@ -73,8 +72,7 @@ def get_data_pos(split_sequences=False):
   currentX = []
   currentY = []
   for line in open('chunking/test.txt'):
-    line = line.rstrip()
-    if line:
+    if line := line.rstrip():
       r = line.split()
       word, tag, _ = r
       currentX.append(word)
@@ -97,8 +95,7 @@ def get_data_ner(split_sequences=False):
   currentX = []
   currentY = []
   for line in open('ner.txt'):
-    line = line.rstrip()
-    if line:
+    if line := line.rstrip():
       r = line.split()
       word, tag = r
       word = word.lower()
@@ -138,7 +135,7 @@ Xtest  = tokenizer.texts_to_sequences(Xtest)
 
 # get word -> integer mapping
 word2idx = tokenizer.word_index
-print('Found %s unique tokens.' % len(word2idx))
+print(f'Found {len(word2idx)} unique tokens.')
 vocab_size = min(MAX_VOCAB_SIZE, len(word2idx) + 1)
 
 
@@ -150,7 +147,7 @@ Ytest  = tokenizer2.texts_to_sequences(Ytest)
 
 # get tag -> integer mapping
 tag2idx = tokenizer2.word_index
-print('Found %s unique tags.' % len(tag2idx))
+print(f'Found {len(tag2idx)} unique tags.')
 num_tags = min(MAX_TAGS, len(tag2idx) + 1)
 
 

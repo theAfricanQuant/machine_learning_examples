@@ -61,7 +61,7 @@ maxlen = min(max(len(s) for s in sequences), MAX_SEQUENCE_LENGTH)
 
 # get word -> integer mapping
 word2idx = tokenizer.word_index
-print('Found %s unique tokens.' % len(word2idx))
+print(f'Found {len(word2idx)} unique tokens.')
 
 
 # pad sequences so that we get a N x T matrix

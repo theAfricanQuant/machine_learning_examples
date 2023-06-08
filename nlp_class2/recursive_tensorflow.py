@@ -59,11 +59,9 @@ class TNN:
         costs = []
         predictions = []
         all_labels = []
-        i = 0
         N = len(trees)
         print("Compiling ops")
-        for t in trees:
-            i += 1
+        for i, t in enumerate(trees, start=1):
             sys.stdout.write("%d/%d\r" % (i, N))
             sys.stdout.flush()
             logits = self.get_output(t)
@@ -98,16 +96,14 @@ class TNN:
                 epoch_cost = 0
                 n_correct = 0
                 n_total = 0
-                j = 0
                 N = len(train_ops)
-                for train_op, cost, prediction, labels in zip(train_ops, costs, predictions, all_labels):
+                for j, (train_op, cost, prediction, labels) in enumerate(zip(train_ops, costs, predictions, all_labels), start=1):
                     _, c, p = session.run([train_op, cost, prediction])
                     epoch_cost += c
                     actual_costs.append(c)
                     n_correct += np.sum(p == labels)
                     n_total += len(labels)
 
-                    j += 1
                     if j % 10 == 0:
                         sys.stdout.write("j: %d, N: %d, c: %f\r" % (j, N, c))
                         sys.stdout.flush()
@@ -184,12 +180,10 @@ class TNN:
             predictions = []
             all_labels = []
 
-            i = 0
             N = len(trees)
             print("Compiling ops")
-            for t in trees:
+            for i, t in enumerate(trees, start=1):
 
-                i += 1
                 sys.stdout.write("%d/%d\r" % (i, N))
                 sys.stdout.flush()
 

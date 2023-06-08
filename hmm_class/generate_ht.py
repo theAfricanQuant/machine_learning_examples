@@ -23,7 +23,7 @@ def generate_sequence(N):
     s = np.random.choice(xrange(M), p=pi) # initial state
     x = np.random.choice(xrange(V), p=B[s]) # initial observation
     sequence = [x]
-    for n in range(N-1):
+    for _ in range(N-1):
         s = np.random.choice(xrange(M), p=A[s]) # next state
         x = np.random.choice(xrange(V), p=B[s]) # next observation
         sequence.append(x)

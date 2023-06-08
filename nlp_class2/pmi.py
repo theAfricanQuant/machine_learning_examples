@@ -103,46 +103,41 @@ unk = word2idx['<UNK>']
 #   assert(w in word2idx)
 
 
-if not os.path.exists('pmi_counts_%s.npz' % V):
-  # init counts
-  wc_counts = lil_matrix((V, V))
+if not os.path.exists(f'pmi_counts_{V}.npz'):
+    # init counts
+    wc_counts = lil_matrix((V, V))
 
-  ### make PMI matrix
-  # add counts
-  k = 0
-  # for line in open('../large_files/text8'):
-  for f in files:
-    for line in open(f):
-      # don't count headers, structured data, lists, etc...
-      if line and line[0] not in ('[', '*', '-', '|', '=', '{', '}'):
-        line_as_idx = []
-        for word in remove_punctuation(line).lower().split():
-          if word in word2idx:
-            idx = word2idx[word]
-            # line_as_idx.append(idx)
-          else:
-            idx = unk
-            # pass
-          line_as_idx.append(idx)
+    ### make PMI matrix
+    # add counts
+    k = 0
+      # for line in open('../large_files/text8'):
+    for f in files:
+        for line in open(f):
+                  # don't count headers, structured data, lists, etc...
+            if line and line[0] not in ('[', '*', '-', '|', '=', '{', '}'):
+                line_as_idx = []
+                for word in remove_punctuation(line).lower().split():
+                    idx = word2idx.get(word, unk)
+                    line_as_idx.append(idx)
 
-        for i, w in enumerate(line_as_idx):
-          # keep count
-          k += 1
-          if k % 10000 == 0:
-            print("%s/%s" % (k, num_tokens))
+                for i, w in enumerate(line_as_idx):
+                    # keep count
+                    k += 1
+                    if k % 10000 == 0:
+                        print(f"{k}/{num_tokens}")
 
-          start = max(0, i - context_size)
-          end   = min(len(line_as_idx), i + context_size)
-          for c in line_as_idx[start:i]:
-            wc_counts[w, c] += 1
-          for c in line_as_idx[i+1:end]:
-            wc_counts[w, c] += 1
-  print("Finished counting")
+                    start = max(0, i - context_size)
+                    end   = min(len(line_as_idx), i + context_size)
+                    for c in line_as_idx[start:i]:
+                      wc_counts[w, c] += 1
+                    for c in line_as_idx[i+1:end]:
+                      wc_counts[w, c] += 1
+    print("Finished counting")
 
-  save_npz('pmi_counts_%s.npz' % V, csr_matrix(wc_counts))
+    save_npz(f'pmi_counts_{V}.npz', csr_matrix(wc_counts))
 
 else:
-  wc_counts = load_npz('pmi_counts_%s.npz' % V)
+    wc_counts = load_npz(f'pmi_counts_{V}.npz')
 
 
 # context counts get raised ^ 0.75
@@ -271,37 +266,31 @@ print("dist to queen:", cos_dist(W[word2idx['queen']], vec))
 
 
 def analogy(pos1, neg1, pos2, neg2):
-  # don't actually use pos2 in calculation, just print what's expected
-  print("testing: %s - %s = %s - %s" % (pos1, neg1, pos2, neg2))
-  for w in (pos1, neg1, pos2, neg2):
-    if w not in word2idx:
-      print("Sorry, %s not in word2idx" % w)
-      return
+      # don't actually use pos2 in calculation, just print what's expected
+    print(f"testing: {pos1} - {neg1} = {pos2} - {neg2}")
+    for w in (pos1, neg1, pos2, neg2):
+        if w not in word2idx:
+            print(f"Sorry, {w} not in word2idx")
+            return
 
-  p1 = W[word2idx[pos1]]
-  n1 = W[word2idx[neg1]]
-  p2 = W[word2idx[pos2]]
-  n2 = W[word2idx[neg2]]
+    p1 = W[word2idx[pos1]]
+    n1 = W[word2idx[neg1]]
+    p2 = W[word2idx[pos2]]
+    n2 = W[word2idx[neg2]]
 
-  vec = p1 - n1 + n2
+    vec = p1 - n1 + n2
 
-  distances = pairwise_distances(vec.reshape(1, D), W, metric='cosine').reshape(V)
-  idx = distances.argsort()[:10]
+    distances = pairwise_distances(vec.reshape(1, D), W, metric='cosine').reshape(V)
+    idx = distances.argsort()[:10]
 
-  # pick the best that's not p1, n1, or n2
-  best_idx = -1
-  keep_out = [word2idx[w] for w in (pos1, neg1, neg2)]
-  for i in idx:
-    if i not in keep_out:
-      best_idx = i
-      break
+    keep_out = [word2idx[w] for w in (pos1, neg1, neg2)]
+    best_idx = next((i for i in idx if i not in keep_out), -1)
+    print(f"got: {pos1} - {neg1} = {top_words[best_idx]} - {neg2}")
+    print("closest 10:")
+    for i in idx:
+      print(top_words[i], distances[i])
 
-  print("got: %s - %s = %s - %s" % (pos1, neg1, top_words[best_idx], neg2))
-  print("closest 10:")
-  for i in idx:
-    print(top_words[i], distances[i])
-
-  print("dist to %s:" % pos2, cos_dist(p2, vec))
+    print(f"dist to {pos2}:", cos_dist(p2, vec))
 
 
 analogy('king', 'man', 'queen', 'woman')

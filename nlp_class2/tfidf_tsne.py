@@ -57,11 +57,9 @@ def main():
 
     # create raw counts first
     A = np.zeros((V, N))
-    j = 0
-    for sentence in sentences:
+    for j, sentence in enumerate(sentences):
         for i in sentence:
             A[i,j] += 1
-        j += 1
     print("finished getting raw counts")
 
     transformer = TfidfTransformer()

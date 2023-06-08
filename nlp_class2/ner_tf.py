@@ -34,8 +34,7 @@ def get_data(split_sequences=False):
   currentX = []
   currentY = []
   for line in open('ner.txt'):
-    line = line.rstrip()
-    if line:
+    if line := line.rstrip():
       r = line.split()
       word, tag = r
       word = word.lower()
@@ -43,7 +42,7 @@ def get_data(split_sequences=False):
         word2idx[word] = word_idx
         word_idx += 1
       currentX.append(word2idx[word])
-      
+
       if tag not in tag2idx:
         tag2idx[tag] = tag_idx
         tag_idx += 1

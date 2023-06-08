@@ -41,7 +41,7 @@ class GloveVectorizer:
         word2vec[word] = vec
         embedding.append(vec)
         idx2word.append(word)
-    print('Found %s word vectors.' % len(word2vec))
+    print(f'Found {len(word2vec)} word vectors.')
 
     # save for later
     self.word2vec = word2vec
@@ -54,22 +54,17 @@ class GloveVectorizer:
 
   def transform(self, data):
     X = np.zeros((len(data), self.D))
-    n = 0
     emptycount = 0
-    for sentence in data:
+    for n, sentence in enumerate(data):
       tokens = sentence.lower().split()
-      vecs = []
-      for word in tokens:
-        if word in self.word2vec:
-          vec = self.word2vec[word]
-          vecs.append(vec)
-      if len(vecs) > 0:
+      if vecs := [
+          self.word2vec[word] for word in tokens if word in self.word2vec
+      ]:
         vecs = np.array(vecs)
         X[n] = vecs.mean(axis=0)
       else:
         emptycount += 1
-      n += 1
-    print("Numer of samples with no words found: %s / %s" % (emptycount, len(data)))
+    print(f"Numer of samples with no words found: {emptycount} / {len(data)}")
     return X
 
   def fit_transform(self, data):
@@ -97,9 +92,8 @@ class Word2VecVectorizer:
     self.D = v.shape[0]
 
     X = np.zeros((len(data), self.D))
-    n = 0
     emptycount = 0
-    for sentence in data:
+    for n, sentence in enumerate(data):
       tokens = sentence.split()
       vecs = []
       m = 0
@@ -111,13 +105,12 @@ class Word2VecVectorizer:
           m += 1
         except KeyError:
           pass
-      if len(vecs) > 0:
+      if vecs:
         vecs = np.array(vecs)
         X[n] = vecs.mean(axis=0)
       else:
         emptycount += 1
-      n += 1
-    print("Numer of samples with no words found: %s / %s" % (emptycount, len(data)))
+    print(f"Numer of samples with no words found: {emptycount} / {len(data)}")
     return X
 
 

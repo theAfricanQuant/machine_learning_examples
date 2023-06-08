@@ -148,7 +148,7 @@ def get_normalized_data():
 def plot_cumulative_variance(pca):
     P = []
     for p in pca.explained_variance_ratio_:
-        if len(P) == 0:
+        if not P:
             P.append(p)
         else:
             P.append(p + P[-1])
@@ -161,8 +161,7 @@ def forward(X, W, b):
     # softmax
     a = X.dot(W) + b
     expa = np.exp(a)
-    y = expa / expa.sum(axis=1, keepdims=True)
-    return y
+    return expa / expa.sum(axis=1, keepdims=True)
 
 
 def predict(p_y):

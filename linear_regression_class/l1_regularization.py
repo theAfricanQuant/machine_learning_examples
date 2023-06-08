@@ -28,7 +28,7 @@ costs = [] # keep track of squared error cost
 w = np.random.randn(D) / np.sqrt(D) # randomly initialize w
 learning_rate = 0.001
 l1 = 10.0 # Also try 5.0, 2.0, 1.0, 0.1 - what effect does it have on w?
-for t in range(500):
+for _ in range(500):
   # update w
   Yhat = X.dot(w)
   delta = Yhat - Y

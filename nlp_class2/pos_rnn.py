@@ -68,7 +68,7 @@ class RNN:
         print("py_x.shape:", testout.shape)
 
         prediction = T.argmax(py_x, axis=1)
-        
+
         cost = -T.mean(T.log(py_x[T.arange(thY.shape[0]), thY]))
         grads = T.grad(cost, self.params)
         dparams = [theano.shared(p.get_value()*0) for p in self.params]
@@ -108,12 +108,10 @@ class RNN:
             sequence_indexes = shuffle(sequence_indexes)
             n_correct = 0
             cost = 0
-            it = 0
-            for j in sequence_indexes:
+            for it, j in enumerate(sequence_indexes, start=1):
                 c, p = self.train_op(X[j], Y[j])
                 cost += c
                 n_correct += np.sum(p == Y[j])
-                it += 1
                 if it % 200 == 0:
                     sys.stdout.write(
                         "j/N: %d/%d correct rate so far: %f, cost so far: %f\r" %
